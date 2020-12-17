@@ -17,6 +17,7 @@ defmodule TetrexWeb.Router do
   scope "/", TetrexWeb do
     pipe_through :browser
 
+    live "/game", GameLive
     live "/", PageLive, :index
   end
 

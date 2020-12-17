@@ -15,6 +15,14 @@ defmodule Tetrex.Tetromino do
     %{tetro | location: Point.right(tetro.location)}
   end
 
+  def left(tetro) do
+    %{tetro | location: Point.left(tetro.location)}
+  end
+
+  def down(tetro) do
+    %{tetro | location: Point.down(tetro.location)}
+  end
+
   def rotate(tetro) do
     %{tetro | rotation: rotate_degrees(tetro.rotation)}
   end

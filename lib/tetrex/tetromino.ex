@@ -1,6 +1,8 @@
 defmodule Tetrex.Tetromino do
   defstruct shape: :l, rotation: 0, location: {5, 1}
 
+  alias Tetrex.Point
+
   def new(options \\ []) do
     __struct__(options)
   end
@@ -9,8 +11,24 @@ defmodule Tetrex.Tetromino do
     new(shape: random_shape())
   end
 
+  def right(tetro) do
+    %{tetro | location: Point.right(tetro.location)}
+  end
+
+  def rotate(tetro) do
+    %{tetro | rotation: rotate_degrees(tetro.rotation)}
+  end
+
   defp random_shape do
     ~w[i t o l j z s]a
     |> Enum.random()
+  end
+
+  defp rotate_degrees(270) do
+    0
+  end
+
+  defp rotate_degrees(n) do
+    n + 90
   end
 end

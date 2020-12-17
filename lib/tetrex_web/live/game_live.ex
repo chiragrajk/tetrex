@@ -2,9 +2,9 @@ defmodule TetrexWeb.GameLive do
   use TetrexWeb, :live_view
   alias Tetrex.Tetromino
 
+
   def mount(_params, _session, socket) do
     :timer.send_interval(500, :tick)
-
     {
       :ok,
       socket
@@ -13,24 +13,14 @@ defmodule TetrexWeb.GameLive do
     }
   end
 
-  def new_tetromino(socket) do
-    assign(socket, tetro: Tetromino.new_random())
-  end
-
-  def show(socket) do
-    assign(socket,
-      points: Tetromino.points(socket.assigns.tetro)
-    )
-  end
-
   def render(assigns) do
     ~L"""
-    <% [{x, y}] = @points %>
+    <% {x, y} = @tetro.location %>
     <section class="phx-hero">
-      <h1>Welcome to Tetris</h1>
+      <h1>Welcome to Tetrex</h1>
       <%= render_board(assigns) %>
       <pre>
-        {<%= x %>, <%= y %>}
+        <%= inspect @tetro %>
       </pre>
     </section>
     """
@@ -45,26 +35,39 @@ defmodule TetrexWeb.GameLive do
     """
   end
 
-  defp render_points(%{points: [{x, y}]} = assigns) do
+  defp render_points(assigns) do
     ~L"""
-    <rect
-      width="20" height="20"
-      x="<%= (x - 1) * 20 %>" y="<%= (y - 1) * 20 %>"
-      style="fill:rgb(255,0,0);" />
+    <%= for {x, y} <- @points do %>
+      <rect
+        width="20" height="20"
+        x="<%= (x - 1) * 20 %>" y="<%= (y - 1) * 20 %>"
+        style="fill:rgb(255,0,0);" />
+    <% end %>
     """
   end
 
-  def down(%{assigns: %{tetro: %{location: {_, 20}}}} = socket) do
-    socket
-    |> new_tetromino
+  defp new_tetromino(socket) do
+    assign(socket, tetro: Tetromino.new_random())
   end
 
-  def down(%{assigns: %{tetro: tetro}} = socket) do
+  defp show(socket) do
+    assign(socket,
+      points: Tetromino.show(socket.assigns.tetro)
+    )
+  end
+
+
+  def down(%{assigns: %{tetro: %{location: {_, 20}}}}=socket) do
     socket
-    |> assign(tetro: Tetromino.down(tetro))
+    |> new_tetromino
+    |> show
+  end
+
+  def down(%{assigns: %{tetro: tetro}}=socket) do
+    assign(socket, tetro: Tetromino.down(tetro))
   end
 
   def handle_info(:tick, socket) do
-    {:noreply, socket |> down() |> show}
+    {:noreply, socket |> down |> show}
   end
 end

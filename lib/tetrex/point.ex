@@ -14,4 +14,8 @@ defmodule Tetrex.Point do
   def down({x, y}) do
     {x, y + 1}
   end
+
+  def move({tx, ty}, {x, y}) do
+    {tx + x, ty + y}
+  end
 end

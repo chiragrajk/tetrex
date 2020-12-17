@@ -54,13 +54,17 @@ defmodule TetrexWeb.GameLive do
     """
   end
 
+  def down(%{assigns: %{tetro: %{location: {_, 20}}}} = socket) do
+    socket
+    |> new_tetromino
+  end
+
   def down(%{assigns: %{tetro: tetro}} = socket) do
     socket
     |> assign(tetro: Tetromino.down(tetro))
-    |> show()
   end
 
   def handle_info(:tick, socket) do
-    {:noreply, socket |> down()}
+    {:noreply, socket |> down() |> show}
   end
 end

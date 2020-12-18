@@ -4,7 +4,10 @@ defmodule TetrexWeb.GameLive do
 
 
   def mount(_params, _session, socket) do
-    :timer.send_interval(500, :tick)
+    if connected?(socket) do
+      :timer.send_interval(500, :tick)
+    end
+
     {
       :ok,
       socket
@@ -15,7 +18,6 @@ defmodule TetrexWeb.GameLive do
 
   def render(assigns) do
     ~L"""
-    <% {x, y} = @tetro.location %>
     <section class="phx-hero">
       <h1>Welcome to Tetrex</h1>
       <%= render_board(assigns) %>
@@ -41,10 +43,19 @@ defmodule TetrexWeb.GameLive do
       <rect
         width="20" height="20"
         x="<%= (x - 1) * 20 %>" y="<%= (y - 1) * 20 %>"
-        style="fill:rgb(255,0,0);" />
+        style="fill:<%= color(@tetro.shape) %>;" />
     <% end %>
     """
   end
+
+  defp color(:l), do: "orange"
+  defp color(:j), do: "blue"
+  defp color(:s), do: "green"
+  defp color(:z), do: "red"
+  defp color(:i), do: "cyan"
+  defp color(:o), do: "yellow"
+  defp color(:t), do: "purple"
+
 
   defp new_tetromino(socket) do
     assign(socket, tetro: Tetromino.new_random())

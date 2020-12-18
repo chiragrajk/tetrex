@@ -18,4 +18,9 @@ defmodule Tetrex.Point do
   def move({tx, ty}, {x, y}) do
     {tx + x, ty + y}
   end
+
+  def add_shape({x, y}, shape) do
+    {x, y, shape}
+  end
+  def add_shape(point_with_shape, _shape), do: point_with_shape
 end

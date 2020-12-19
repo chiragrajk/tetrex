@@ -92,4 +92,7 @@ defmodule Tetrex.Tetromino do
   defp rotate_degrees(n) do
     n + 90
   end
+
+  def maybe_move(_old, new, true = _valid), do: new
+  def maybe_move(old, _new, false = _valid), do: old
 end

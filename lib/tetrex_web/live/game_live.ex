@@ -1,6 +1,6 @@
 defmodule TetrexWeb.GameLive do
   use TetrexWeb, :live_view
-  alias Tetrex.Tetromino
+  alias Tetrex.{Game, Tetromino}
 
   @rotate_keys ["ArrowDown", " "]
   def mount(_params, _session, socket) do
